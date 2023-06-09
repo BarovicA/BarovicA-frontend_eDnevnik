@@ -8,28 +8,35 @@ import LoginPage from "./components/Login";
 import MainPage from "./components/MainPage";
 import Subjects from "./components/Subjects";
 import Grades from "./components/Grades";
+import AddNewSubject from "./components/AddNewSubject"
+import AuthProvider from "./components/AuthProvider";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-  },
-  {
-    path: "/login",
-    element: <LoginPage />,
-  },
-  {
-    path: "/main",
-    element: <MainPage />,
     children: [
       {
-        path: "subjects",
-        element: <Subjects />
+        path: "login",
+        element: <LoginPage />,
       },
       {
-        path: "grades",
-        element: <Grades />
-        
+        path: "main",
+        element: <MainPage />,
+        children: [
+          {
+            path: "subjects",
+            element: <Subjects />,
+          },
+          {
+            path: "grades",
+            element: <Grades />
+          },
+          {
+            path: "addnewsubject",
+            element: <AddNewSubject />
+          },
+        ],
       },
     ],
   },
@@ -37,9 +44,11 @@ const router = createBrowserRouter([
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
+  <AuthProvider>
   <React.StrictMode>
     <RouterProvider router={router} />
   </React.StrictMode>
+  </AuthProvider>
 );
 reportWebVitals();
 
