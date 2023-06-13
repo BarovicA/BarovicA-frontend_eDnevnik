@@ -115,27 +115,21 @@ const Subjects = () => {
   };
 
   return (
-    <Container>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: 3,
-          marginTop: 2,
-          paddingLeft: "12px"
-        }}
-      >
+    <Container sx={{ marginTop: 3}}>
+    <Grid container spacing={6} sx={{marginBottom: "40px" }}>
+      <Grid item xs={12} sm={6} md={4}>
         <TextField
           label="Search..."
           variant="outlined"
+          fullWidth
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-      
         />
-        <FormControl variant="outlined">
+      </Grid>
+      <Grid item xs={12} sm={6} md={3}>
+        <FormControl variant="outlined" fullWidth>
           <InputLabel id="year-select-label">School Year</InputLabel>
           <Select
-            sx={{ width: "130px" }}
             labelId="year-select-label"
             value={yearFilter}
             onChange={(e) => setYearFilter(e.target.value)}
@@ -148,10 +142,11 @@ const Subjects = () => {
             ))}
           </Select>
         </FormControl>
-        <FormControl variant="outlined">
+      </Grid>
+      <Grid item xs={12} sm={6} md={3}>
+        <FormControl variant="outlined" fullWidth>
           <InputLabel id="semester-select-label">Semester</InputLabel>
           <Select
-            sx={{ width: "130px" }}
             labelId="semester-select-label"
             value={semesterFilter}
             onChange={(e) => setSemesterFilter(e.target.value)}
@@ -164,13 +159,19 @@ const Subjects = () => {
             ))}
           </Select>
         </FormControl>
+      </Grid>
+      <Grid item xs={12} sm={6} md={2}>
         <Button
+          sx={{height: "100%"}}
           variant="outlined"
           onClick={() => navigate("/main/addnewsubject")}
+          fullWidth
+          size="large"
         >
           Add new 
         </Button>
-      </Box>
+      </Grid>
+    </Grid>
       <Grid container spacing={3}>
         {subjects.map((subject) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={subject.id}>

@@ -10,6 +10,9 @@ import Subjects from "./components/Subjects";
 import Grades from "./components/Grades";
 import AddNewSubject from "./components/AddNewSubject"
 import AuthProvider from "./components/AuthProvider";
+import { ThemeProvider } from './Contexts/ThemeContext';
+import SubjectDetails from "./subjects/SubjectDetails";
+import EditSubject from "./subjects/EditSubject";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +39,14 @@ const router = createBrowserRouter([
             path: "addnewsubject",
             element: <AddNewSubject />
           },
+          {
+            path: "subjects/:id",
+            element: <SubjectDetails />
+          },
+          {
+            path: "subjects/edit/:id",
+            element: <EditSubject />
+          },
         ],
       },
     ],
@@ -45,9 +56,11 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <AuthProvider>
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+    <ThemeProvider>  
+      <React.StrictMode>
+        <RouterProvider router={router} />
+      </React.StrictMode>
+    </ThemeProvider>  {/* Kraj ThemeProvider */}
   </AuthProvider>
 );
 reportWebVitals();

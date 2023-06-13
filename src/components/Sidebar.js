@@ -1,39 +1,51 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Box, Toolbar} from '@mui/material';
+import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Box, Toolbar, Switch, useTheme } from '@mui/material';
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import Diversity3Icon from '@mui/icons-material/Diversity3';
+import { useMediaQuery } from '@mui/material';
+import { ThemeContext } from '../Contexts/ThemeContext';
+
 const Sidebar = () => {
-  const drawerWidth = 240;
+  const { darkMode, setDarkMode } = useContext(ThemeContext);
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm')); // adjust 'sm' to your desired breakpoint
+
+  const drawerWidth = isSmallScreen ? 60 : 240;
 
   return (
     <Drawer
-        variant="permanent"
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
-        }}
+      variant="permanent"
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+      }}
       >
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
-      <List>
-        <ListItem  disablePadding>
-            <ListItemButton component={NavLink} to="/main/subjects">
-                <ListItemIcon>
-                    <LocalLibraryIcon color="action" fontSize="large" sx={{width: "80%", paddingTop: "0px"}}/>
-                    <ListItemText  primary="Subjects" />
-                </ListItemIcon>
-            </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding >
-            <ListItemButton component={NavLink} to="/main/grades">
-                <Diversity3Icon color="action" fontSize="large" sx={{width: "40%", paddingTop: "0px"}}/>
-                <ListItemText primary="Grades" />
-            </ListItemButton>  
-        </ListItem>
-      </List>
-      </Box>
+          <List>
+            <ListItem disablePadding>
+                <ListItemButton component={NavLink} to="/main/subjects">
+                    <ListItemIcon>
+                        <LocalLibraryIcon color="action" fontSize="large" />
+                        {!isSmallScreen && <ListItemText sx={{paddingLeft: "20px"}} primary="Subjects" />}
+                    </ListItemIcon>
+                </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding >
+                <ListItemButton component={NavLink} to="/main/grades">
+                    <Diversity3Icon color="action" fontSize="large" />
+                    {!isSmallScreen && <ListItemText sx={{paddingLeft: "20px"}} primary="Grades" />}
+                </ListItemButton>  
+            </ListItem>
+            <ListItem sx={{ flexDirection: isSmallScreen ? "column" : "row" }}>
+                <Switch  checked={darkMode} onChange={() => setDarkMode(!darkMode)} />
+                {!isSmallScreen && <ListItemText  primary="Dark mode" />}
+                
+            </ListItem>
+          </List>
+        </Box>
     </Drawer>
   );
 };
