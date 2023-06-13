@@ -24,13 +24,14 @@ const Login = () => {
     try {
       const response = await axios.post(
         "http://localhost:8080/api/v1/auth/login",
-        { username, password }
+        { username, password },
+        { withCredentials: true }  // dodato zbog sesije i kolacica 
       );
       const user = response.data;
       handleLogin(user);
-      setErrorMessage(null); // uspešno logovanje, brišemo poruku o grešci
+      setErrorMessage(null); // uspesno logovanje, brisemo poruku o gresci
     } catch (error) {
-      setErrorMessage("Login failed. Please check your username and password."); // neuspešno logovanje, postavljamo poruku o grešci
+      setErrorMessage("Login failed. Please check your username and password."); // neuspesno logovanje, postavljamo poruku o gresci
     }
   };
 

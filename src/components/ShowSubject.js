@@ -8,7 +8,7 @@ const ShowSubject = ({subject, handleDelete}) => {
   return (
     <Card
       variant="outlined"
-      sx={{ border: "solid #a6a4a4 0.1px", margin: "10px" }}
+      sx={{  height: '100%', overflow: 'auto' }}
     >
       <CardContent>
         <Typography variant="h5" align="center" sx={{ paddingBottom: "20px" }}>
@@ -28,7 +28,7 @@ const ShowSubject = ({subject, handleDelete}) => {
           Weekly Hours: {subject.weeklyHours}
         </Typography>
 
-        <Box sx={{display: "flex", justifyContent: "space-around"}} >
+        <Box sx={{display: "flex", justifyContent: "space-evenly"}} >
         <IconButton
           color="primary"
           component={NavLink}

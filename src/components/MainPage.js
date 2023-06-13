@@ -13,7 +13,9 @@ const MainPage = () => {
       <div style={{ display: "flex", paddingTop: 64 }}> 
         <Sidebar />
         <div style={{ flex: 1, overflow: 'auto'}}> {/* Add this */}
-          <Outlet />
+          <Outlet>
+            Welcome!
+          </Outlet>
         </div>
       </div>
     </div>
