@@ -66,7 +66,7 @@ return (
           flexDirection: 'column', 
           gap: 4, 
           marginTop: 10, 
-          maxWidth: '40%', 
+          maxWidth: '30em', 
           mx: 'auto' 
         }}
       >
@@ -87,6 +87,7 @@ return (
       <FormControl fullWidth>
         <InputLabel>School Year</InputLabel>
         <Select
+          label="School year"
           value={year}
           onChange={(e) => setYear(e.target.value)}
           required
@@ -101,6 +102,7 @@ return (
       <FormControl fullWidth>
         <InputLabel>Semester</InputLabel>
         <Select
+          label="Semester"
           value={semester}
           onChange={(e) => setSemester(e.target.value)}
           required

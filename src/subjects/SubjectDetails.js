@@ -2,8 +2,9 @@ import React, { useState, useEffect, useContext } from "react";
 import AuthContext from "../components/AuthContext";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, CardContent, Typography, Button, Snackbar, Alert } from "@mui/material";
+import {Grid, Card, CardContent, Typography, Button, Snackbar, Alert, CardMedia } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import subjectImage from "../subjectImage.png"
 
 const SubjectDetails = () => {
     const [subject, setSubject] = useState(null);
@@ -49,10 +50,19 @@ const SubjectDetails = () => {
       >
         Back
       </Button>
-      <Card>
+      <Grid sx = {{display: "flex", justifyContent: "center"}}>
+      <Card sx={{width: "30em", margin: "3px"}}>
         <CardContent>
-          <Typography variant="h5">
+          <Typography variant="h5" align="center" sx={{padding: "20px"}} >
             {subject.name}
+          </Typography>
+          <CardMedia
+           sx={{ height: 250, marginBottom: "30px" }}
+           image={subjectImage}
+           title="subjects"
+          />
+          <Typography color="textSecondary">
+            ID: {subject.id}
           </Typography>
           <Typography color="textSecondary">
             School year: {subject.year}
@@ -66,13 +76,14 @@ const SubjectDetails = () => {
           <Typography color="textSecondary">
             Teachers:
             {subject.teachers.map((teacher) => (
-              <Typography key={teacher.id}>
+              <Typography key={teacher.id} sx={{paddingLeft: "30px"}}>
                 {teacher.firstName} {teacher.lastName}
               </Typography>
             ))}
           </Typography>
         </CardContent>
       </Card>
+      </Grid>
       <Snackbar 
         open={openSnackbar} 
         autoHideDuration={7000} 

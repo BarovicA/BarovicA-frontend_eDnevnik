@@ -39,9 +39,9 @@ const Sidebar = () => {
                     {!isSmallScreen && <ListItemText sx={{paddingLeft: "20px"}} primary="Grades" />}
                 </ListItemButton>  
             </ListItem>
-            <ListItem sx={{ flexDirection: isSmallScreen ? "column" : "row" }}>
-                <Switch  checked={darkMode} onChange={() => setDarkMode(!darkMode)} />
-                {!isSmallScreen && <ListItemText  primary="Dark mode" />}
+            <ListItem sx={{ paddingLeft: "5px", flexDirection: isSmallScreen ? "column" : "row" }}>
+                <Switch sx={{width: "57px"}} checked={darkMode} onChange={() => setDarkMode(!darkMode)} />
+                {!isSmallScreen && <ListItemText sx={{paddingLeft: "10px"}} primary="Dark mode" />}
                 
             </ListItem>
           </List>
