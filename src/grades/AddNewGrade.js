@@ -1,17 +1,15 @@
 import React, { useState, useContext } from 'react';
 import { Container, TextField, FormControl, InputLabel, Select, MenuItem, Button, Box, Alert 
     } from '@mui/material';
-import AuthContext from './AuthContext';
+import AuthContext from '../components/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const schoolYears = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
-const semesters = ["FIRST", "SECOND"];
+const units = [1, 2, 3, 4 ];
 
-const AddNewSubject = () => {
-  const [name, setName] = useState("");
-  const [weeklyHours, setWeeklyHours] = useState("");
-  const [year, setYear] = useState("");
-  const [semester, setSemester] = useState("");
+const AddNewGrade = () => {
+  const [schoolYear, setSchoolYear] = useState("");
+  const [unit, setUnit] = useState("");
   const { token } = useContext(AuthContext);
   const [alert, setAlert] = useState({ open: false, message: '', severity: '' });
   
@@ -20,20 +18,14 @@ const AddNewSubject = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (weeklyHours < 1 || weeklyHours > 6 || isNaN(weeklyHours)) {
-      setAlert({ open: true, message: "Weekly hours must be a number between 1 and 6.", severity: "error" });
-      return;
-    }
 
     const newSubject = {
-      name,
-      weeklyHours: parseInt(weeklyHours),
-      year,
-      semester,
+      schoolYear,
+      unit, 
       deleted: false,
     };
 
-    const response = await fetch(`http://localhost:8080/api/v1/subjects/add`, {
+    const response = await fetch(`http://localhost:8080/api/v1/grades/add`, {
     method: 'POST',
     //{credentials: 'include',}
     headers: {
@@ -46,12 +38,10 @@ const AddNewSubject = () => {
   if (response.ok) {
     setAlert({ open: true, message: "Subject added successfully.", severity: "success" });
     // reset form
-    setName("");
-    setWeeklyHours("");
-    setYear("");
-    setSemester("");
+    setSchoolYear("");
+    setUnit("");
   } else if (response.status === 409) {
-    setAlert({ open: true, message: "The subject already exists.", severity: "error" });
+    setAlert({ open: true, message: "The grade already exists.", severity: "error" });
   } else {
     setAlert({ open: true, message: "Error while adding subject.", severity: "error" });
   }
@@ -75,26 +65,13 @@ return (
           mx: 'auto' 
         }}
       >
-      <TextField
-        label="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-        fullWidth
-      />
-      <TextField
-        label="Weekly Hours"
-        value={weeklyHours}
-        onChange={(e) => setWeeklyHours(e.target.value)}
-        required
-        fullWidth
-      />
+     
       <FormControl fullWidth>
         <InputLabel>School Year</InputLabel>
         <Select
           label="School year"
-          value={year}
-          onChange={(e) => setYear(e.target.value)}
+          value={schoolYear}
+          onChange={(e) => setSchoolYear(e.target.value)}
           required
         >
           {schoolYears.map((year, index) => (
@@ -105,16 +82,16 @@ return (
         </Select>
       </FormControl>
       <FormControl fullWidth>
-        <InputLabel>Semester</InputLabel>
+        <InputLabel>unit</InputLabel>
         <Select
-          label="Semester"
-          value={semester}
-          onChange={(e) => setSemester(e.target.value)}
+          label="unit"
+          value={unit}
+          onChange={(e) => setUnit(e.target.value)}
           required
         >
-          {semesters.map((semester, index) => (
-            <MenuItem key={index} value={semester}>
-              {semester}
+          {units.map((unit, index) => (
+            <MenuItem key={index} value={unit}>
+              {unit}
             </MenuItem>
           ))}
         </Select>
@@ -127,7 +104,7 @@ return (
             gap: 4
           }}
         >
-          <Button variant="contained" type="submit">Add New Subject</Button>
+          <Button variant="contained" type="submit">Add New Grade</Button>
           <Button variant="outlined" onClick={handleBack}>Back</Button>
         </Box>
         {alert.open && (
@@ -140,4 +117,4 @@ return (
   );
 };
 
-export default AddNewSubject;
+export default AddNewGrade;

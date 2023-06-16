@@ -13,6 +13,10 @@ import {
 } from "@mui/material";
 
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -20,12 +24,17 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState(null); // dodato za prikazivanje poruke o grešci
   const { handleLogin } = useContext(AuthContext);
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  
+
   const submitLogin = async () => {
     try {
       const response = await axios.post(
         "http://localhost:8080/api/v1/auth/login",
         { username, password },
-        { withCredentials: true }  // dodato zbog sesije i kolacica 
+        { withCredentials: true } // dodato zbog sesije i kolacica
       );
       const user = response.data;
       handleLogin(user);
@@ -36,7 +45,7 @@ const Login = () => {
   };
 
   return (
-    <Grid >
+    <Grid>
       <div
         style={{
           backgroundImage: `url(${classroom})`,
@@ -50,8 +59,8 @@ const Login = () => {
           height: "100vh",
           opacity: "0.7",
           zIndex: "-1",
-        }}>
-      </div>
+        }}
+      ></div>
 
       <Paper
         sx={{
@@ -76,7 +85,9 @@ const Login = () => {
           {/* <h3>Login</h3> */}
         </Grid>
         <Grid container justifyContent="center" sx={{ gap: "20px" }}>
-          <TextField value={username} onChange={e => setUsername(e.target.value)}
+          <TextField
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             id="outlined-basic"
             label="username"
             variant="outlined"
@@ -84,42 +95,50 @@ const Login = () => {
             fullWidth
             required
           />
-          <TextField value={password} onChange={e => setPassword(e.target.value)}
+          {/* <TextField value={password} onChange={e => setPassword(e.target.value)}
             id="outlined-basic"
             label="password"
             variant="outlined"
             placeholder="password"
             fullWidth
             required
+          /> */}
+          <TextField
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            id="outlined-basic"
+            label="password"
+            type={showPassword ? "text" : "password"}
+            variant="outlined"
+            placeholder="password"
+            fullWidth
+            required
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={handleClickShowPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
         </Grid>
         <Grid container justifyContent="flex-end">
-          <Button onClick={submitLogin} variant="contained">
+          <Button
+            sx={{ backgroundColor: "#5c6bc0" }}
+            onClick={submitLogin}
+            variant="contained"
+          >
             Login
           </Button>
         </Grid>
       </Paper>
     </Grid>
-    //   <div style={{
-    //       backgroundImage: "url('https://dynaimage.cdn.cnn.com/cnn/c_fill,g_auto,w_1200,h_675,ar_16:9/https%3A%2F%2Fcdn.cnn.com%2Fcnnnext%2Fdam%2Fassets%2F210831221005-stock-schools-parents-covid-teachers.jpg')",
-    //       backgroundSize: 'cover',
-    //       backgroundRepeat: 'no-repeat',
-    //       backgroundPosition: 'center',
-    //       position: 'fixed',
-    //       top: '0',
-    //       left: '0',
-    //       width: '100vw',
-    //       height: '100vh',
-    //       zIndex: '-1',
-    //       opacity: '50%'
-    //   }}>
-    //   <h1>Login</h1>
-    //   <input type="text" placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} />
-    //   <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
-    //   <button onClick={submitLogin}>Login</button>
-    //   {errorMessage && <p>{errorMessage}</p>} {/* prikazujemo poruku o grešci ako postoji */}
-    // </div>
   );
 };
 

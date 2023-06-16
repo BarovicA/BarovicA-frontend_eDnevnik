@@ -2,39 +2,37 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import AuthContext from "../components/AuthContext";
-import { TextField, Button, Box, Typography, FormControl, InputLabel, Select, MenuItem, Alert } from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem, Button, Box, Alert } from "@mui/material";
 import { produce } from "immer";
 
 const schoolYears = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
-const semesters = ["FIRST", "SECOND"];
+const units = [1, 2, 3, 4];
 
-const EditSubject = () => {
+const EditGrade = () => {
   const { id } = useParams();
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [subject, setSubject] = useState({
-    name: "",
-    weeklyHours: "",
-    year: "",
-    semester: "",
+  const [grade, setGrade] = useState({
+    schoolYear: "",
+    unit: "",
   });
   const [alert, setAlert] = useState({ open: false, message: '', severity: '' });
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/v1/subjects/${id}`, {
+      .get(`http://localhost:8080/api/v1/grades/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        setSubject(response.data);
+        setGrade(response.data);
       });
   }, [id, token]);
 
   const handleInputChange = (e) => {
-    setSubject(
-      produce(subject, (draft) => {
+    setGrade(
+      produce(grade, (draft) => {
         draft[e.target.name] = e.target.value;
       })
     );
@@ -47,23 +45,18 @@ const EditSubject = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (subject.weeklyHours < 1 || subject.weeklyHours > 6 || isNaN(subject.weeklyHours)) {
-      setAlert({ open: true, message: "Weekly hours must be a number between 1 and 6.", severity: "error" });
-      return;
-    }
-
     axios
-      .put(`http://localhost:8080/api/v1/subjects/update/${id}`, subject, {
+      .put(`http://localhost:8080/api/v1/grades/upadte/${id}`, grade, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then(() => {
-        setAlert({ open: true, message: "Subject updated successfully.", severity: "success" });
+        setAlert({ open: true, message: "Grade updated successfully.", severity: "success" });
         navigate(-1);
       })
       .catch((error) => {
-        setAlert({ open: true, message: "Error while updating subject.", severity: "error" });
+        setAlert({ open: true, message: "Error while updating grade.", severity: "error" });
       });
   };
 
@@ -80,33 +73,12 @@ const EditSubject = () => {
         mx: "auto",
       }}
     >
-      <Typography variant="h5" align="center" sx={{ pb: 2 }}>
-        Edit Subject
-      </Typography>
-      <TextField
-        margin="normal"
-        fullWidth
-        id="name"
-        label="Name"
-        name="name"
-        value={subject.name}
-        onChange={handleInputChange}
-      />
-      <TextField
-        margin="normal"
-        fullWidth
-        id="weeklyHours"
-        label="Weekly Hours"
-        name="weeklyHours"
-        value={subject.weeklyHours}
-        onChange={handleInputChange}
-      />
       <FormControl fullWidth>
         <InputLabel>School Year</InputLabel>
         <Select
           label="School year"
-          value={subject.year}
-          name="year"
+          value={grade.schoolYear}
+          name="schoolYear"
           onChange={handleInputChange}
           required
         >
@@ -118,17 +90,17 @@ const EditSubject = () => {
         </Select>
       </FormControl>
       <FormControl fullWidth>
-        <InputLabel>Semester</InputLabel>
+        <InputLabel>Unit</InputLabel>
         <Select
-          label="Semester"
-          value={subject.semester}
-          name="semester"
+          label="Unit"
+          value={grade.unit}
+          name="unit"
           onChange={handleInputChange}
           required
         >
-          {semesters.map((semester, index) => (
-            <MenuItem key={index} value={semester}>
-              {semester}
+          {units.map((unit, index) => (
+            <MenuItem key={index} value={unit}>
+              {unit}
             </MenuItem>
           ))}
         </Select>
@@ -147,7 +119,7 @@ const EditSubject = () => {
           color="primary"
           sx={{ mt: 3, mb: 2 }}
         >
-          Update Subject
+          Update Grade
         </Button>
         <Button onClick={handleBack}>Back</Button>
       </Box>
@@ -160,4 +132,4 @@ const EditSubject = () => {
   );
 };
 
-export default EditSubject;
+export default EditGrade;

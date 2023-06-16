@@ -1,4 +1,4 @@
-import { Card, CardContent, Typography, IconButton, Box } from "@mui/material";
+import { Card, CardContent, Typography, IconButton, Box, Tooltip } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import InfoIcon from "@mui/icons-material/Info";
 import EditIcon from "@mui/icons-material/Edit";
@@ -29,6 +29,7 @@ const ShowSubject = ({subject, handleDelete}) => {
         </Typography>
 
         <Box sx={{display: "flex", justifyContent: "space-evenly"}} >
+        <Tooltip disableFocusListener disableTouchListener title="Details">
         <IconButton
           color="primary"
           component={NavLink}
@@ -36,16 +37,21 @@ const ShowSubject = ({subject, handleDelete}) => {
         >
           <InfoIcon />
         </IconButton>
+        </Tooltip>
+        <Tooltip disableFocusListener disableTouchListener title="Edit">
         <IconButton
-          color="primary"
+          color="secondary"
           component={NavLink}
           to={`/main/subjects/edit/${subject.id}`}
         >
           <EditIcon />
         </IconButton>
-        <IconButton color="secondary" onClick={() => handleDelete(subject.id)}>
+        </Tooltip>
+        <Tooltip disableFocusListener disableTouchListener title="Delete">
+        <IconButton color="third" onClick={() => handleDelete(subject.id)}>
           <DeleteIcon />
         </IconButton>
+        </Tooltip>
         </Box>
       </CardContent>
     </Card>

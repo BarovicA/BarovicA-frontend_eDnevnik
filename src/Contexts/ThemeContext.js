@@ -9,6 +9,15 @@ export const ThemeProvider = ({ children }) => {
   const theme = createTheme({
     palette: {
       mode: darkMode ? 'dark' : 'light',
+      primary: {
+        main: '#5c6bc0', // Postavite glavnu boju za primarnu boju
+      },
+      secondary: {
+        main: '#26a69a', // Postavite glavnu boju za sekundarnu boju
+      },  
+      third: {
+        main: '#ef5350',
+      },
     },
   });
 

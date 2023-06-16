@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import ShowSubject from "./ShowSubject";
+import ShowGrade from "./ShowGrade";
 import {
-  TextField,
   Button,
   Select,
   MenuItem,
@@ -16,24 +15,23 @@ import {
   DialogContentText,
   DialogTitle,
   Snackbar, 
-  Alert,
-  CircularProgress 
+  Alert
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/system";
-import AuthContext from "./AuthContext";
+import AuthContext from "../components/AuthContext";
 import { ThemeContext } from '../Contexts/ThemeContext';
 
 const schoolYears = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
-const semesters = ["", "FIRST", "SECOND"];
+const units = ["", 1, 2, 3, 4, 5]; 
 
-
-
-const Subjects = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+const Grades = () => {
+  
+  //"http://localhost:8080/api/v1/grades/all"
+  
   const [yearFilter, setYearFilter] = useState("");
-  const [semesterFilter, setSemesterFilter] = useState("");
-  const [subjects, setSubjects] = useState([]);
+  const [unitFilter, setUnitFilter] = useState("");
+  const [grades, setGrades] = useState([]);
   const navigate = useNavigate();
   const { token } = useContext(AuthContext);
 
@@ -44,8 +42,6 @@ const Subjects = () => {
   const [open, setOpen] = useState(false); // kontrola za otvaranje/zatvaranje dijaloga
   const [deleteId, setDeleteId] = useState(null); // id predmeta za brisanje
   
-  const [loading, setLoading] = useState(false);
-
   const { darkMode } = useContext(ThemeContext); //provera teme zbog hover
   const AnimatedBox = styled(Box)({
     transition: "transform 0.3s",
@@ -64,19 +60,14 @@ const Subjects = () => {
   };
 
   const fetchData = async () => {
-    setLoading(true);
-    const url = new URL("http://localhost:8080/api/v1/subjects/search");
-
-    if (searchQuery) {
-      url.searchParams.append("name", searchQuery);
-    }
+    const url = new URL("http://localhost:8080/api/v1/grades/all");
 
     if (yearFilter) {
-      url.searchParams.append("year", yearFilter);
+      url.searchParams.append("schoolYear", yearFilter);
     }
 
-    if (semesterFilter) {
-      url.searchParams.append("semester", semesterFilter);
+    if (unitFilter) {
+      url.searchParams.append("unit", unitFilter);
     }
 
     const response = await fetch(url.toString(), {
@@ -86,13 +77,13 @@ const Subjects = () => {
     });
 
     const data = await response.json();
-    setSubjects(data);
-    setLoading(false);
+    setGrades(data);
+    console.log(grades);
   };
 
   useEffect(() => {
     fetchData();
-  }, [searchQuery, yearFilter, semesterFilter]);
+  }, [yearFilter, unitFilter]);
 
   const handleDelete = (id) => {
     setDeleteId(id);
@@ -104,7 +95,7 @@ const Subjects = () => {
   };
 
   const handleConfirmDelete = async () => {
-    const response = await fetch(`http://localhost:8080/api/v1/subjects/delete/${deleteId}`, {
+    const response = await fetch(`http://localhost:8080/api/v1/grades/delete/${deleteId}`, {
       method: 'DELETE',
       credentials: 'include',
       headers: {
@@ -129,17 +120,9 @@ const Subjects = () => {
   };
 
   return (
-    <Container sx={{ marginTop: 3 }}>
-    <Grid container spacing={6} sx={{marginBottom: "40px" }}>
-      <Grid item xs={12} sm={6} md={4}>
-        <TextField
-          label="Search..."
-          variant="outlined"
-          fullWidth
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </Grid>
+    <Container sx={{ marginTop: 3}}>
+    <Grid container spacing={6} 
+       sx={{display: "flex", justifyContent: "space-between", marginBottom: "40px" }}>
       <Grid item xs={12} sm={6} md={3}>
         <FormControl variant="outlined" fullWidth>
           <InputLabel id="year-select-label">School Year</InputLabel>
@@ -159,16 +142,16 @@ const Subjects = () => {
       </Grid>
       <Grid item xs={12} sm={6} md={3}>
         <FormControl variant="outlined" fullWidth>
-          <InputLabel id="semester-select-label">Semester</InputLabel>
+          <InputLabel id="semester-select-label">Unit</InputLabel>
           <Select
             labelId="semester-select-label"
-            value={semesterFilter}
-            onChange={(e) => setSemesterFilter(e.target.value)}
-            label="Semester"
+            value={unitFilter}
+            onChange={(e) => setUnitFilter(e.target.value)}
+            label="Unit"
           >
-            {semesters.map((semester, index) => (
-              <MenuItem key={index} value={semester}>
-                {semester || "None"}
+            {units.map((unit, index) => (
+              <MenuItem key={index} value={unit}>
+                {unit || "None"}
               </MenuItem>
             ))}
           </Select>
@@ -178,7 +161,7 @@ const Subjects = () => {
         <Button
           sx={{height: "100%", lineHeight: 'normal'}}
           variant="outlined"
-          onClick={() => navigate("/main/addnewsubject")}
+          onClick={() => navigate("/main/addnewgrade")}
           fullWidth
           size="large"
         >
@@ -186,14 +169,9 @@ const Subjects = () => {
         </Button>
       </Grid>
     </Grid>
-    {loading ? (
-      <Box sx={{ display: 'flex', justifyContent: 'center', height: '100vh' }}>
-        <CircularProgress sx ={{ color: '#yourColor' }}/>
-      </Box>
-    ) : ( <>
       <Grid container spacing={3}>
-        {subjects.map((subject) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={subject.id}>
+        {grades.map((grade) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={grade.id}>
             <AnimatedBox
               sx={{
                 borderRadius: "5px",
@@ -203,21 +181,21 @@ const Subjects = () => {
                 margin: "10px"
               }}
             >
-              <ShowSubject subject={subject} handleDelete={handleDelete} />
+              <ShowGrade grade={grade} handleDelete={handleDelete} />
             </AnimatedBox>
           </Grid>
         ))}
       </Grid>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{"Delete Subject"}</DialogTitle>
+        <DialogTitle>{"Delete Grade"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this subject?
+            Are you sure you want to delete this grade?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleConfirmDelete} color="error" autoFocus>
+          <Button onClick={handleConfirmDelete} color="primary" autoFocus>
             Yes
           </Button>
         </DialogActions>
@@ -232,11 +210,10 @@ const Subjects = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
-      </>
-      )}
     </Container>
-    
   );
+
+
 };
 
-export default Subjects;
+export default Grades;

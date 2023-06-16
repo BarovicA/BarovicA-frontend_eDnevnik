@@ -7,10 +7,13 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import LoginPage from "./components/Login";
 import MainPage from "./components/MainPage";
 import Subjects from "./components/Subjects";
-import Grades from "./components/Grades";
-import AddNewSubject from "./components/AddNewSubject"
+import Grades from "./grades/Grades";
+import EditGrade from "./grades/EditGrade";
+import GradeDetails from "./grades/GradeDetails";
+import AddNewGrade from "./grades/AddNewGrade";
+import AddNewSubject from "./components/AddNewSubject";
 import AuthProvider from "./components/AuthProvider";
-import { ThemeProvider } from './Contexts/ThemeContext';
+import { ThemeProvider } from "./Contexts/ThemeContext";
 import SubjectDetails from "./subjects/SubjectDetails";
 import EditSubject from "./subjects/EditSubject";
 
@@ -32,20 +35,32 @@ const router = createBrowserRouter([
             element: <Subjects />,
           },
           {
-            path: "grades",
-            element: <Grades />
-          },
-          {
             path: "addnewsubject",
-            element: <AddNewSubject />
+            element: <AddNewSubject />,
           },
           {
             path: "subjects/:id",
-            element: <SubjectDetails />
+            element: <SubjectDetails />,
           },
           {
             path: "subjects/edit/:id",
-            element: <EditSubject />
+            element: <EditSubject />,
+          },
+          {
+            path: "grades",
+            element: <Grades />,
+          },
+          {
+            path: "addnewgrade",
+            element: <AddNewGrade />,
+          },
+          {
+            path: "grades/:id",
+            element: <GradeDetails />,
+          },
+          {
+            path: "grades/edit/:id",
+            element: <EditGrade />,
           },
         ],
       },
@@ -56,11 +71,12 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <AuthProvider>
-    <ThemeProvider>  
+    <ThemeProvider>
       <React.StrictMode>
         <RouterProvider router={router} />
       </React.StrictMode>
-    </ThemeProvider>  {/* Kraj ThemeProvider */}
+    </ThemeProvider>{" "}
+    {/* Kraj ThemeProvider */}
   </AuthProvider>
 );
 reportWebVitals();

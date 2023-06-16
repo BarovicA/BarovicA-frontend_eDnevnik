@@ -11,6 +11,7 @@ const MainPage = () => {
   const { username } = useContext(AuthContext); // Get the username from the context
   const { theme } = useContext(ThemeContext);
   const location = useLocation();
+  const { userRole } = useContext(AuthContext);
 
   return (  
 <ThemeProvider theme={theme}>
@@ -21,7 +22,7 @@ const MainPage = () => {
           <Sidebar />
           <div style={{ flex: 1, overflow: 'auto'}}> {/* Add this */}
             <Outlet/>
-            {location.pathname === "/main" && <div style={{padding: "20px"}}><h3 >Welcome {username}!</h3></div>}
+            {location.pathname === "/main" && <div style={{padding: "20px"}}><h3 >Welcome {username}, your role is {userRole}.</h3></div>}
           </div>
         </div>
       </div>
