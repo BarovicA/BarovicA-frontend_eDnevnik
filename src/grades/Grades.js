@@ -78,7 +78,7 @@ const Grades = () => {
 
     const data = await response.json();
     setGrades(data);
-    console.log(grades);
+    
   };
 
   useEffect(() => {

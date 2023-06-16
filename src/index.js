@@ -16,6 +16,12 @@ import AuthProvider from "./components/AuthProvider";
 import { ThemeProvider } from "./Contexts/ThemeContext";
 import SubjectDetails from "./subjects/SubjectDetails";
 import EditSubject from "./subjects/EditSubject";
+import ProtectedRoute from './ProtectedRoute';
+import TeacherSubjects from "./subjects/TeacherSubjects";
+import TeacherGrades from "./grades/TeacherGrades";
+import StudentSubjects from "./subjects/StudentSubjects";
+import TeacherSubjectDetails from "./subjects/TeacherSubjectDetails";
+import TeacherGradeDetails from "./grades/TeacherGradeDetails";
 
 const router = createBrowserRouter([
   {
@@ -28,11 +34,12 @@ const router = createBrowserRouter([
       },
       {
         path: "main",
-        element: <MainPage />,
+        element: <ProtectedRoute component={MainPage} />,
         children: [
           {
             path: "subjects",
             element: <Subjects />,
+            
           },
           {
             path: "addnewsubject",
@@ -49,6 +56,7 @@ const router = createBrowserRouter([
           {
             path: "grades",
             element: <Grades />,
+            
           },
           {
             path: "addnewgrade",
@@ -62,6 +70,28 @@ const router = createBrowserRouter([
             path: "grades/edit/:id",
             element: <EditGrade />,
           },
+          {
+            path: "teachersubjects",
+            element: <TeacherSubjects />,
+            
+          },
+          {
+            path: "teachergrades",
+            element: <TeacherGrades />,
+          },
+          {
+            path: "studentsubjects",
+            element: <StudentSubjects />,
+          },
+          {
+            path: "teachersubjects/:id",
+            element: <TeacherSubjectDetails />,
+          },
+          {
+            path: "teachergrades/:id",
+            element: <TeacherGradeDetails />,
+          },
+
         ],
       },
     ],

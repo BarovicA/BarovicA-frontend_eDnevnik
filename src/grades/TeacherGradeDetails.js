@@ -3,10 +3,10 @@ import React, { useState, useEffect, useContext } from "react";
 import AuthContext from "../components/AuthContext";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import {Grid, Card, Box, CardContent, Typography, Button, Snackbar, Alert, CardMedia } from "@mui/material";
+import {Grid, Card, Box, CardContent, Typography, Button, Snackbar, Alert, CircularProgress } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-const GradeDetails = () => {
+const TeacherGradeDetails = () => {
     const [grade, setGrade] = useState(null);
     const [error, setError] = useState(null);
     const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -25,12 +25,12 @@ const GradeDetails = () => {
     useEffect(() => {
       const fetchGrade = async () => {
         try {
-          const response = await axios.get(`http://localhost:8080/api/v1/grades/${id}`, {
+          const response = await axios.get(`http://localhost:8080/api/v1/teachers/myGrades/${id}`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
           });
-          
+          console.log(response.data)
           setGrade(response.data);
         } catch (error) {
           setError("An error occurred while fetching the data.");
@@ -41,7 +41,13 @@ const GradeDetails = () => {
       fetchGrade();
     }, [id, token]);
   
-    if (!grade) return "Loading...";
+    if (!grade) {
+        return (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <CircularProgress />
+          </Box>
+        );
+      }
 
   return (
        <>
@@ -72,7 +78,7 @@ const GradeDetails = () => {
           <Typography color="textSecondary">
             Students:
             {grade.student.map((student) => (
-              <Typography key={student.id} sx={{paddingLeft: "30px"}}>
+              <Typography  key={student.id} sx={{paddingLeft: "30px"}}>
                 {student.firstName} {student.lastName}
               </Typography>
             ))}
@@ -95,4 +101,4 @@ const GradeDetails = () => {
 };
 
 
-export default GradeDetails;
+export default TeacherGradeDetails;

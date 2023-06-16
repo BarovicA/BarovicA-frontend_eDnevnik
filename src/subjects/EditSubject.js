@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import AuthContext from "../components/AuthContext";
@@ -12,6 +12,9 @@ const EditSubject = () => {
   const { id } = useParams();
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const isComponentMounted = useRef(true);
+
   const [subject, setSubject] = useState({
     name: "",
     weeklyHours: "",
@@ -21,16 +24,34 @@ const EditSubject = () => {
   const [alert, setAlert] = useState({ open: false, message: '', severity: '' });
 
   useEffect(() => {
+
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source();
+
     axios
       .get(`http://localhost:8080/api/v1/subjects/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        cancelToken: source.token,
       })
       .then((response) => {
-        setSubject(response.data);
+        if (isComponentMounted.current) {
+          setSubject(response.data);
+        }
+      })
+      .catch((error) => {
+        if (!axios.isCancel(error)) {
+          console.log(error);
+        }
       });
-  }, [id, token]);
+
+      return () => {
+        isComponentMounted.current = false;
+        source.cancel('Operation canceled by the user.');
+      };
+    }, [id, token]);
+  
 
   const handleInputChange = (e) => {
     setSubject(
