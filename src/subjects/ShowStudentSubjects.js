@@ -1,4 +1,7 @@
-import { Card, CardContent, Typography, IconButton, Box, Tooltip, Dialog, DialogTitle, DialogContent } from "@mui/material";
+import { Card, CardContent, Typography, IconButton,
+   Box, Tooltip, Dialog, DialogTitle, DialogContent, Paper,
+   TableContainer, Table, TableHead, TableRow, TableCell, TableBody,
+  } from "@mui/material";
 import { useState } from "react";
 import StarsIcon from '@mui/icons-material/Stars';
 
@@ -41,14 +44,29 @@ const ShowStudentSubject = ({ subject }) => {
         </Tooltip>
       </Box>
 
-      <Dialog onClose={handleClose} open={open}>
+      <Dialog onClose={handleClose} open={open} PaperComponent={Paper}>
         <DialogTitle>{subject.name} </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ width: 400 }}>
             marks:
-          {subject.marks.length > 0 ? (
-            subject.marks.map((mark, index) => (
-              <Typography key={index}>{mark.markValue} {mark.date} </Typography>
-            ))
+            {subject.marks.length > 0 ? (
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Date</TableCell>
+                    <TableCell>Mark</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {subject.marks.map((mark, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{mark.date}</TableCell>
+                      <TableCell>{mark.markValue}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           ) : (
             <Typography>No marks yet.</Typography>
           )}

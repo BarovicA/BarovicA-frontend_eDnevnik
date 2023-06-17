@@ -36,7 +36,8 @@ const EditSubject = () => {
         cancelToken: source.token,
       })
       .then((response) => {
-        if (isComponentMounted.current) {
+         {
+          console.log(response.data);
           setSubject(response.data);
         }
       })
